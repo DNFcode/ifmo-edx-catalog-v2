@@ -22,7 +22,7 @@ def get_mapped_index_courses(courses):
 
 def get_course_categories_ids(course):
     categories = CategoryCourses.objects.filter(course_id=course.id)
-    names = " ".join([c.category.id for c in categories])
+    names = " ".join([str(c.category.id) for c in categories])
     return names
 
 

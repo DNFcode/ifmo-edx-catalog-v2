@@ -1,15 +1,13 @@
 from ifmo_catalog.models import *
-from django.core.exceptions import ObjectDoesNotExist
 
-def get_course_subject(course):
-    try:
-        subject = SubjectCourses.objects.get(course_id=course.id).subject
-        return subject.name
-    except ObjectDoesNotExist:
-        return "None"
+
+def get_course_subjects(course):
+    subjects = SubjectCourses.objects.filter(course_id=course.id)
+    names = " ".join([s.subject.name for s in subjects])
+    return names
 
 
 def get_all_subjects():
-    subjects = Subject.objects.all()
-    names = map(lambda s: s.name, subjects)
-    return sorted(names)
+    subjects = Subject.objects.filter(parent=None)
+    subjects = [s for s in subjects if s.subject_set]
+    return subjects

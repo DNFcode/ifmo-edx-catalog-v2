@@ -4,9 +4,11 @@ from xmodule_django.models import CourseKeyField
 
 class Subject(models.Model):
     name = models.CharField(max_length=100)
+    parent = models.ForeignKey("self", blank=True, null=True, on_delete=models.SET_NULL)
 
     def __str__(self):
-        return self.name
+        parent = self.parent
+        return (str(parent) + "/" if parent else "") + self.name
 
 
 class SubjectCourses(models.Model):
@@ -14,4 +16,4 @@ class SubjectCourses(models.Model):
     course_id = CourseKeyField(max_length=255, db_index=True)
 
     def __str__(self):
-        return "%s %s" % (self.subject.name, self.course_id)
+        return str(self.subject) + " " + str(self.course_id)

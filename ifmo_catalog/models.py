@@ -1,19 +1,24 @@
-from django.db import models
+from django.db import models, DatabaseError
 from xmodule_django.models import CourseKeyField
 
 
-class Subject(models.Model):
+class Category(models.Model):
     name = models.CharField(max_length=100)
     parent = models.ForeignKey("self", blank=True, null=True, on_delete=models.SET_NULL)
 
-    def __str__(self):
+    def __unicode__(self):
         parent = self.parent
-        return (str(parent) + "/" if parent else "") + self.name
+        return (unicode(parent) + "/" if parent else "") + self.name
+
+    def save(self, *args, **kwargs):
+        if self.parent and self.parent.id == self.id:
+            raise DatabaseError('Recursive foreign key')
+        super(Category, self).save(*args, **kwargs)
 
 
-class SubjectCourses(models.Model):
-    subject = models.ForeignKey(Subject)
+class CategoryCourses(models.Model):
+    category = models.ForeignKey(Category)
     course_id = CourseKeyField(max_length=255, db_index=True)
 
-    def __str__(self):
-        return str(self.subject) + " " + str(self.course_id)
+    def __unicode__(self):
+        return unicode(self.category) + " " + unicode(self.course_id)

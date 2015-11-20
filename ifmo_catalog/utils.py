@@ -22,11 +22,11 @@ def get_mapped_index_courses(courses):
 
 def get_course_categories_ids(course):
     categories = CategoryCourses.objects.filter(course_id=course.id)
-    names = " ".join([str(c.category.id) for c in categories])
-    return names
+    ids = " ".join([str(c.category.id) for c in categories])
+    return ids
 
 
 def get_all_categories():
     categories = Category.objects.filter(parent=None)
     categories = [c for c in categories if c.category_set]
-    return categories
+    return sorted(categories, key=lambda c: c.priority, reverse=True)

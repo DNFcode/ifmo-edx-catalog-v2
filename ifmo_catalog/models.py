@@ -5,6 +5,7 @@ from xmodule_django.models import CourseKeyField
 class Category(models.Model):
     name = models.CharField(max_length=100)
     parent = models.ForeignKey("self", blank=True, null=True, on_delete=models.SET_NULL)
+    priority = models.IntegerField(default=0)
 
     def __unicode__(self):
         parent = self.parent

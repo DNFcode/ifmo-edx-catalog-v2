@@ -26,6 +26,12 @@ def get_course_categories_ids(course):
     return ids
 
 
+def get_course_categories_names(course):
+    categories = CategoryCourses.objects.filter(course_id=course.id)
+    names = [c.category.name for c in categories]
+    return names
+
+
 def get_all_categories():
     categories = Category.objects.filter(parent=None)
     categories = [c for c in categories if c.category_set]

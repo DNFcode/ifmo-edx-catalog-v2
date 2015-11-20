@@ -29,4 +29,4 @@ def get_course_categories_ids(course):
 def get_all_categories():
     categories = Category.objects.filter(parent=None)
     categories = [c for c in categories if c.category_set]
-    return sorted(categories, key=lambda c: c.priority, reverse=True)
+    return sorted(categories, key=lambda c: c.priority)

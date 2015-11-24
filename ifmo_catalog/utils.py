@@ -36,3 +36,7 @@ def get_all_categories():
     categories = Category.objects.filter(parent=None)
     categories = [c for c in categories if c.category_set]
     return sorted(categories, key=lambda c: c.priority)
+
+
+def filter_visible_courses(courses):
+    return [c for c in courses if not getattr(c, 'hidden', False)]

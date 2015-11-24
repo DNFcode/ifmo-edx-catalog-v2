@@ -1,3 +1,5 @@
+from collections import defaultdict
+
 from ifmo_catalog.models import *
 
 
@@ -27,9 +29,11 @@ def get_course_categories_ids(course):
 
 
 def get_course_categories_names(course):
-    categories = CategoryCourses.objects.filter(course_id=course.id)
-    names = [c.category.name for c in categories]
-    return names
+    category_map = defaultdict(list)
+    for c in CategoryCourses.objects.filter(course_id=course.id):
+        cat = c.category
+        category_map[cat.parent.name].append(cat.name)
+    return category_map
 
 
 def get_all_categories():

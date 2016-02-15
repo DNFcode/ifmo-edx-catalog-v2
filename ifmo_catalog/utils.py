@@ -1,4 +1,4 @@
-from collections import defaultdict
+from collections import OrderedDict
 
 from ifmo_catalog.models import *
 
@@ -29,10 +29,11 @@ def get_course_categories_ids(course):
 
 
 def get_course_categories_names(course):
-    category_map = defaultdict(list)
-    for c in CategoryCourses.objects.filter(course_id=course.id):
+    category_map = OrderedDict()
+    for c in CategoryCourses.objects.filter(course_id=course.id)\
+            .order_by('category__parent__priority', 'category__priority'):
         cat = c.category
-        category_map[cat.parent.name].append(cat.name)
+        category_map.setdefault(cat.parent.name, []).append(cat.name)
     return category_map
 
 

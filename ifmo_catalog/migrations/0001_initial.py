@@ -1,49 +1,32 @@
 # -*- coding: utf-8 -*-
-from south.utils import datetime_utils as datetime
-from south.db import db
-from south.v2 import SchemaMigration
-from django.db import models
+from __future__ import unicode_literals
+
+from django.db import migrations, models
+import django.db.models.deletion
+import xmodule_django.models
 
 
-class Migration(SchemaMigration):
+class Migration(migrations.Migration):
 
-    def forwards(self, orm):
-        # Adding model 'Subject'
-        db.create_table('ifmo_catalog_subject', (
-            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('name', self.gf('django.db.models.fields.CharField')(max_length=100)),
-        ))
-        db.send_create_signal('ifmo_catalog', ['Subject'])
+    dependencies = [
+    ]
 
-        # Adding model 'SubjectCourses'
-        db.create_table('ifmo_catalog_subjectcourses', (
-            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('subject', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['ifmo_catalog.Subject'])),
-            ('course_id', self.gf('xmodule_django.models.CourseKeyField')(max_length=255, db_index=True)),
-        ))
-        db.send_create_signal('ifmo_catalog', ['SubjectCourses'])
-
-
-    def backwards(self, orm):
-        # Deleting model 'Subject'
-        db.delete_table('ifmo_catalog_subject')
-
-        # Deleting model 'SubjectCourses'
-        db.delete_table('ifmo_catalog_subjectcourses')
-
-
-    models = {
-        'ifmo_catalog.subject': {
-            'Meta': {'object_name': 'Subject'},
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'name': ('django.db.models.fields.CharField', [], {'max_length': '100'})
-        },
-        'ifmo_catalog.subjectcourses': {
-            'Meta': {'object_name': 'SubjectCourses'},
-            'course_id': ('xmodule_django.models.CourseKeyField', [], {'max_length': '255', 'db_index': 'True'}),
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'subject': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['ifmo_catalog.Subject']"})
-        }
-    }
-
-    complete_apps = ['ifmo_catalog']
+    operations = [
+        migrations.CreateModel(
+            name='Category',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('name', models.CharField(max_length=100)),
+                ('priority', models.IntegerField(default=0)),
+                ('parent', models.ForeignKey(on_delete=django.db.models.deletion.SET_NULL, blank=True, to='ifmo_catalog.Category', null=True)),
+            ],
+        ),
+        migrations.CreateModel(
+            name='CategoryCourses',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('course_id', xmodule_django.models.CourseKeyField(max_length=255, db_index=True)),
+                ('category', models.ForeignKey(to='ifmo_catalog.Category')),
+            ],
+        ),
+    ]

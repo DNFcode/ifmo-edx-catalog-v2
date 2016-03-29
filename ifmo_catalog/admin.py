@@ -6,6 +6,7 @@ from models import *
 class CategoryForm(ModelForm):
     class Meta:
         model = Category
+        fields = '__all__'
 
     def __init__(self, *args, **kwargs):
         super(CategoryForm, self).__init__(*args, **kwargs)

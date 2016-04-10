@@ -44,4 +44,4 @@ def get_all_categories():
 
 
 def filter_visible_courses(courses):
-    return [c for c in courses if not getattr(c, 'hidden', False)]
+    return [c for c in courses if getattr(c, 'catalog_visibility', 'both') == 'both']
